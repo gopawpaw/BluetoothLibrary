@@ -29,6 +29,8 @@ public interface BluetoothScanner {
 	
 	public void clearDevices();
 
+	public void closeBluetooth();
+	
 	public static class Factory {
 
 		public static BluetoothScanner create(Context context) {
@@ -78,7 +80,6 @@ public interface BluetoothScanner {
 			
 			@Override
 			public boolean startDiscovery() {
-				// TODO Auto-generated method stub
 				boolean ret = false;
 				foundDevicesAddress.clear();
 				if (!mBluetoothAdapter.isEnabled()) {
@@ -106,7 +107,6 @@ public interface BluetoothScanner {
 			
 			@Override
 			public void cancelDiscovery() {
-				// TODO Auto-generated method stub
 				try {
 					mBluetoothAdapter.cancelDiscovery();
 					context.unregisterReceiver(mReceiver);
@@ -158,9 +158,16 @@ public interface BluetoothScanner {
 			
 			@Override
 			public void clearDevices() {
-				// TODO Auto-generated method stub
 				foundDevicesAddress.clear();
 				foundDevices.clear();
+			}
+
+			@Override
+			public void closeBluetooth() {
+				cancelDiscovery();
+				if(mBluetoothAdapter != null){
+					mBluetoothAdapter.disable();
+				}
 			}
 		}
 	}
